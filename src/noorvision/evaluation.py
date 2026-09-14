@@ -19,6 +19,8 @@ class EvaluationResult:
     def __post_init__(self) -> None:
         if not self.case_id:
             raise ValueError("case_id must not be empty")
+        if self.status not in {"pass", "fail"}:
+            raise ValueError("status must be 'pass' or 'fail'")
         if not 0.0 <= self.score <= 1.0:
             raise ValueError("score must be between 0.0 and 1.0")
         if not self.reason:
