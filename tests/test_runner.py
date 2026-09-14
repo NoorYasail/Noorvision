@@ -21,6 +21,20 @@ def test_runner_executes_exactly_requested_cycles() -> None:
     assert all(trace is not None for trace in summary.traces)
 
 
+def test_runner_records_one_decision_then_reaches_experiment() -> None:
+    agent = NoorvisionAgent()
+
+    summary = run_cycles(agent, 3)
+
+    assert [trace.action for trace in summary.traces] == [
+        "capture_context",
+        "record_decision",
+        "run_next_experiment",
+    ]
+    assert len(agent.memory_store.list(MemoryKind.DECISION)) == 1
+    assert summary.experiments == 1
+
+
 def test_runner_rejects_negative_count() -> None:
     agent = NoorvisionAgent()
 

@@ -31,6 +31,26 @@ def test_evaluation_result_can_represent_failure_without_hiding_it() -> None:
     assert result.reason != ""
 
 
+def test_evaluation_result_rejects_unsupported_status() -> None:
+    with pytest.raises(ValueError, match="status must be 'pass' or 'fail'"):
+        EvaluationResult(
+            case_id="case-invalid-status",
+            status="pending",  # type: ignore[arg-type]
+            score=0.5,
+            reason="An unsupported status.",
+        )
+
+
+def test_evaluation_result_rejects_empty_reason() -> None:
+    with pytest.raises(ValueError, match="reason must not be empty"):
+        EvaluationResult(
+            case_id="case-invalid-reason",
+            status="fail",
+            score=0.0,
+            reason="",
+        )
+
+
 def test_evaluation_result_is_immutable() -> None:
     result = EvaluationResult(
         case_id="case-003",

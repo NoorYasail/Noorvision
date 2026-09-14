@@ -24,7 +24,17 @@ def execute_action(store: MemoryStore, action: str) -> ActionResult:
         )
         return ActionResult(action=action, memory=memory)
 
-    if action in {"define_project", "record_decision", "run_next_experiment"}:
+    if action == "record_decision":
+        memory = store.add(
+            Memory(
+                MemoryKind.DECISION,
+                "Initial decision",
+                "Record the next explicit Noorvision decision before running an experiment.",
+            )
+        )
+        return ActionResult(action=action, memory=memory)
+
+    if action in {"define_project", "run_next_experiment"}:
         return ActionResult(action=action)
 
     raise ValueError(f"unknown action: {action}")
